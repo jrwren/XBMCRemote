@@ -12,6 +12,7 @@ packages
 
 # utilities create backup files
 *.bak
+*~
 
 # mstest test results
 TestResults
