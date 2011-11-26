@@ -1,0 +1,90 @@
+﻿<Window x:Class="XBMCRemote.LibraryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        Title="XBMC Library" 
+        d:ThemeManager.ThemeName="Office2007Black"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  mc:Ignorable="d" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="21"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="21"/>
+        </Grid.RowDefinitions>
+        <Grid >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock>Search:</TextBlock>
+            <TextBox Grid.Column="1" Text="{Binding SearchString, UpdateSourceTrigger= PropertyChanged}"/>
+        </Grid>
+            <ListBox Grid.Row="1" 
+                     x:Name="listbox"
+                     VirtualizingStackPanel.IsVirtualizing="true"                     
+            VirtualizingStackPanel.VirtualizationMode="Standard"
+            ScrollViewer.CanContentScroll ="True"
+            ItemsSource="{Binding LibraryItems}" />
+        <StatusBar Grid.Row="2" >
+            <!-- http://www.smartypantscoding.com/sites/default/files/statusbarWork.xaml
+                 http://www.smartypantscoding.com/content/decent-wpf-statusbar-example
+            -->
+            <StatusBar.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="NoWrap" />
+                    <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                    <Setter Property="Padding" Value="2,0" />
+                </Style>
+            </StatusBar.Resources>
+            <!-- the root element of our StatusBar is a Grid where we will define the sections of our StatusBar-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <!-- field one -->
+                    <ColumnDefinition Width="Auto" />
+                    <!-- field two -->
+                    <ColumnDefinition Width="*" />
+                    <!-- status field -->
+                    <ColumnDefinition Width="*" />
+                    <!-- error field -->
+                </Grid.ColumnDefinitions>
+
+                <!-- field one -->
+                <!-- this field is small enough that we will allow it to always take as much space as it needs -->
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
+                    <TextBlock Text="{Binding LibraryItems.Count, StringFormat='\{0\} items total'}"></TextBlock>
+                </StackPanel>
+
+                <!-- field two -->
+                <!-- this field is small enough that we will allow it to always take as much space as it needs -->
+                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                    <Separator />
+                    <TextBlock Text="{Binding FilteredLibraryItems.Count, StringFormat='\{0\} items match'}"></TextBlock>
+                    <TextBlock ></TextBlock>
+                </StackPanel>
+
+                <!-- status field -->
+                <!-- the text in this field (and the error field below) can be long, and needs to be truncated if necessary 
+               with an elipses(..). the elipses on the TextBlock is setup by the StatusBarTextBlock Style (as the 
+               previous TextBlocks use as well), but since this Column's width is * instead of Auto, they aren't allowed 
+               to grow indefinitely, so they will truncate the text (which is what we want) -->
+                <DockPanel LastChildFill="True" Grid.Column="2">
+                    <Separator DockPanel.Dock="Left" />
+                    <TextBlock  
+                       ToolTip=""
+                       Text="" />
+                </DockPanel>
+
+                <!-- error field -->
+                <DockPanel LastChildFill="True" Grid.Column="3">
+                    <Separator DockPanel.Dock="Left" />
+                    <!-- DockPanel.Dock="Left" Margin="2,0" Source="http://www.smartypantscoding.com/sites/default/files/big-red-x.gif" Width="16" / -->
+                    <TextBlock  
+                       ToolTip=""
+                       Text="" />
+                </DockPanel>
+
+            </Grid>
+        </StatusBar>
+    </Grid>
+</Window>

@@ -1,0 +1,156 @@
+﻿<dx:DXWindow x:Class="XBMCRemote.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:XBMCRemote"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        Title="XBMC Remote"
+        Width="350" Height="500" MinWidth="300" MinHeight="450"
+        d:dxThemeManager.ThemeName="Office2007Black"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  mc:Ignorable="d"
+             d:implicitreftoDevExpressData="make sure you reference devexpress data."
+    >
+    <dx:DXWindow.InputBindings>
+        <KeyBinding Command="ComponentCommands.MoveUp" Key="Up" />
+        <KeyBinding Command="ComponentCommands.MoveDown" Key="Down" />
+        <KeyBinding Command="ComponentCommands.MoveLeft" Key="Left" />
+        <KeyBinding Command="ComponentCommands.MoveRight" Key="Right" />
+        <KeyBinding Command="MediaCommands.Select" Key="D5" />
+        <KeyBinding Command="MediaCommands.Select"
+                    Key="Enter" />
+        <KeyBinding Command="MediaCommands.Pause"
+                    Key="Pause" />
+    </dx:DXWindow.InputBindings>
+    <dx:DXWindow.CommandBindings>
+        <CommandBinding Command="ComponentCommands.MoveUp"
+                        Executed="up" />
+        <CommandBinding Command="ComponentCommands.MoveDown"
+                        Executed="down" />
+        <CommandBinding Command="ComponentCommands.MoveLeft"
+                        Executed="left" />
+        <CommandBinding Command="ComponentCommands.MoveRight"
+                        Executed="right" />
+        <CommandBinding Command="MediaCommands.Select"
+                        Executed="enter" />
+    </dx:DXWindow.CommandBindings>
+    <Grid d:Background="Gainsboro">
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Padding" Value="5"/>
+            </Style>
+            <Style TargetType="RepeatButton">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Padding" Value="5"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="10"/>
+            <RowDefinition MinHeight="20"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <StackPanel >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Name="filename" />
+                    <Button Grid.Column="1" Height="16" Padding="0" Margin="0" Click="Library_Click">Library</Button>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                        <TextBlock Name="currentposition"/>
+            <Slider Name="position" ValueChanged="position_changed" Minimum="0" Maximum="100" 
+                    Grid.Column="1"
+                    AutoToolTipPlacement="BottomRight"
+                    AutoToolTipPrecision="1"
+                    Interval="1"
+                    Ticks="10"
+                    d:ToolTip="{Binding RelativeSource={RelativeSource Self},
+ Path=Value, StringFormat=The Value: \{0:0\}}" />
+                <TextBlock Name="tracklength" Grid.Column="2" />
+                </Grid>
+            </StackPanel>
+        </Grid>
+        <Grid Margin="10,0" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Click="power_click">power</Button>
+            <Button Click="esc_click" Grid.Column="1" ToolTip="Escape">|&lt;</Button>
+            <Button Click="back_to_movie_click" Grid.Column="2" ToolTip="back to movie">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="7" Height="7" Fill="Black" Margin="4" />
+                    <Polygon Points="0,0 10,7 0,14 0,0 " Fill="Black" Stroke="Black" />
+                </StackPanel>
+                </Button>
+            <Button Click="show_hide_subtitles_click" ToolTip="show hide subtitles" Grid.Column="3">
+                _</Button>
+            <Button Click="back_click" Grid.Column="4">Back</Button>
+        </Grid>
+                <Grid Grid.Row="2" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <RepeatButton Command="ComponentCommands.MoveUp" Grid.Column="1">up</RepeatButton>
+                    <RepeatButton Command="ComponentCommands.MoveLeft" Grid.Row="1">&lt;</RepeatButton>
+                    <RepeatButton Command="MediaCommands.Select" Grid.Column="1" Grid.Row="1">enter</RepeatButton>
+                    <RepeatButton Command="ComponentCommands.MoveRight" Grid.Column="2" Grid.Row="1">&gt;</RepeatButton>
+                    <RepeatButton Command="ComponentCommands.MoveDown" Grid.Column="1" Grid.Row="2">down</RepeatButton>
+                </Grid>
+                <Grid Grid.Row="3" Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Click="i_click" ToolTip="show/hide movie info" Grid.Column="0">i</Button>
+                    <Button Click="stop_click" Grid.Column="2" ToolTip="Stop">
+                        <Rectangle Width="10" Height="10" Fill="Black"  />
+                    </Button>
+                    <Button Click="pause_click" Grid.Column="1" Grid.Row="1" ToolTip="Pause">||&gt;</Button>
+                    <Button Click="leftscrub_click" Grid.Column="0" Grid.Row="2">&lt;&lt;</Button>
+                    <Button Click="rightscrub_click" Grid.Column="2" Grid.Row="2">&gt;&gt;</Button>
+                </Grid>
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Click="mute_click">mute</Button>
+            <Slider Name="volume" ValueChanged="volume_changed" Grid.Column="1" Minimum="0" Maximum="100" 
+                    AutoToolTipPlacement="BottomRight"
+                    AutoToolTipPrecision="1"
+                    Interval="1"
+                    Ticks="10"
+                    ToolTip="{Binding RelativeSource={RelativeSource Self},
+ Path=Value, StringFormat=The Value: \{0:0\}}" />
+                </Grid>
+            <TextBlock Name="status" Grid.Row="5" />
+    </Grid>
+    
+</dx:DXWindow>
