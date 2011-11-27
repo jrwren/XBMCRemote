@@ -64,8 +64,11 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevExpress.Data.v11.2, Version=11.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Xpf.Core.v11.2, Version=11.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="AsyncCtpLibrary">
+      <HintPath>..\..\..\..\Microsoft Visual Studio Async CTP\Samples\AsyncCtpLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Data.v11.2, Version=11.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Core.v11.2, Version=11.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="Elevate">
       <HintPath>..\packages\elevate.0.1.0\lib\Elevate.dll</HintPath>
     </Reference>
@@ -197,6 +200,6 @@
   -->
   <UsingTask TaskName="NotifyPropertyWeaverMsBuildTask.WeavingTask" AssemblyFile="$(SolutionDir)Tools\NotifyPropertyWeaverMsBuildTask.dll" />
   <Target Name="AfterCompile">
-    <NotifyPropertyWeaverMsBuildTask.WeavingTask CheckForIsChanged="true" />
+    <NotifyPropertyWeaverMsBuildTask.WeavingTask CheckForIsChanged="true" TryToWeaveAllTypes="true" />
   </Target>
 </Project>

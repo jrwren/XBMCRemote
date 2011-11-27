@@ -59,7 +59,7 @@
                 <!-- this field is small enough that we will allow it to always take as much space as it needs -->
                 <StackPanel Orientation="Horizontal" Grid.Column="1">
                     <Separator />
-                    <TextBlock Text="{Binding FilteredLibraryItems.Count, StringFormat='\{0\} items match'}"></TextBlock>
+                    <TextBlock Text="{Binding FilteredLibraryItemsCount, StringFormat='\{0\} items match'}"></TextBlock>
                     <TextBlock ></TextBlock>
                 </StackPanel>
 

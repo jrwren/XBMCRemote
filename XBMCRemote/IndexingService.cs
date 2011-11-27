@@ -17,12 +17,12 @@ namespace XBMCRemote
             {
                 using (var file = System.IO.File.OpenRead(filename))
                     Files = (HashSet<string>)new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter().Deserialize(file);
-                Console.WriteLine(Files.Count + " files read from previous database.");
+                System.Diagnostics.Debug.WriteLine(Files.Count + " files read from previous database.");
             }
             else
             {
                 Files = new HashSet<string>();
-                Console.WriteLine("0 files read from previous database.");
+                System.Diagnostics.Debug.WriteLine("0 files read from previous database.");
             }
             FilesUpdated += (_, __) => { };
         }
@@ -48,34 +48,32 @@ namespace XBMCRemote
             using(var file = System.IO.File.OpenWrite(filename))
                 new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter().Serialize(file,Files);
         }
-        public void addEntriesToIndex(string location)
+        public async Task addEntriesToIndex(string location)
         {
-            //System.Diagnostics.Debug.Write(location +" ");
-            
-            WebClient wc = new WebClient();
-            Action<string> process = (string result) =>
+            //System.Diagnostics.Debug.Write(location +" ");            
+            Func<string,IList<string>> process = (string result) =>
             {
-                var newfiles = false;
                 IList<string> responseList = xbmcListRepsonseParser.GetItemsFromRepsonse(result);
-                IList<string> strippedresponseList = responseList.Select(f => f.Replace(location, "")).ToList();
+                var strippedresponseList = responseList.Select(f => f.Replace(location, "")).ToList();
+                var filesAdded = new List<string>();
                 foreach(var item in 
                     strippedresponseList )
                     if (!Files.Contains(item))
                     {
                         Files.Add(item);
-                        newfiles = true;
+                        filesAdded.Add(item);
                     }
-                if (newfiles)
+                if (filesAdded.Count>0)
                 {
-                    FilesUpdated(this, new EventArgs<IList<string>>(strippedresponseList));
-                    System.Diagnostics.Debug.WriteLine(Files.Count + " items");
+                    FilesUpdated(this, new EventArgs<IList<string>>(filesAdded));
+                    System.Diagnostics.Debug.WriteLine(filesAdded.Count+" new items added for total of "+Files.Count + " items");
                 }
-                foreach (var dir in responseList.Where(f => f.EndsWith("/")))
-                    addEntriesToIndex(dir);
+                return responseList;
             };
-            //wc.DownloadStringCompleted += (o, ea) => process(ea.Result);
-            var result1 = wc.DownloadString(new Uri(App.xbox + "/xbmcCmds/xbmcHttp?command=GetDirectory(" + location + ")"));
-            process(result1);
+            var message = await App.HttpClient.GetAsync(new Uri(App.xbox + "/xbmcCmds/xbmcHttp?command=GetDirectory(" + location + ")"));
+            var entries = process(message.Content.ReadAsString());
+            foreach (var dir in entries.Where(f => f.EndsWith("/")))
+                await addEntriesToIndex(dir);
         }
         public event EventHandler<EventArgs<IList<string>>> FilesUpdated;
     }
