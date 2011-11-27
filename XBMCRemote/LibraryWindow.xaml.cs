@@ -20,7 +20,24 @@ using System.ComponentModel;
 namespace XBMCRemote
 {
 
-    public partial class LibraryWindow : Window, INotifyPropertyChanged
+    public partial class LibraryWindow : Window
+    {
+        public LibraryWindow()
+        {
+            InitializeComponent();
+            DataContext = new LibraryWindowViewModel();
+            this.listbox.MouseDoubleClick += new MouseButtonEventHandler(listbox_MouseDoubleClick);
+         }
+                   
+        async void listbox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var location = this.listbox.SelectedItem;
+            System.Diagnostics.Debug.WriteLine("playing " + location);
+            var response = await App.HttpClient.GetAsync(App.xbox + "/xbmcCmds/xbmcHttp?command=PlayFile(" + location + ")");
+            System.Diagnostics.Debug.WriteLine(response.Content.ReadAsString());
+        }
+    }
+    public class LibraryWindowViewModel : INotifyPropertyChanged
     {
         public string SearchString { get; set; }
         public ObservableCollection<string> LibraryItems { get; set; }
@@ -30,10 +47,8 @@ namespace XBMCRemote
 
         IndexingService iservice = new IndexingService();
 
-        public LibraryWindow()
+        public LibraryWindowViewModel() 
         {
-            InitializeComponent();
-            DataContext = this;
             view = CollectionViewSource.GetDefaultView(LibraryItems);
 
             LibraryItems = new System.Collections.ObjectModel.ObservableCollection<string>(iservice.Files);
@@ -63,7 +78,6 @@ namespace XBMCRemote
             //    .Where(et => et.EventArgs.PropertyName == "LibraryItems")
             //    .Do(et => view = CollectionViewSource.GetDefaultView(LibraryItems));
             
-            this.listbox.MouseDoubleClick += new MouseButtonEventHandler(listbox_MouseDoubleClick);
             
 
         }
@@ -77,13 +91,6 @@ namespace XBMCRemote
                 System.Diagnostics.Debug.WriteLine("added " + newfile + " to list");
             }
         }
-
-        async void listbox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            var location = this.listbox.SelectedItem;
-            System.Diagnostics.Debug.WriteLine("playing " + location);
-            var response = await App.HttpClient.GetAsync(App.xbox + "/xbmcCmds/xbmcHttp?command=PlayFile(" + location + ")");
-            System.Diagnostics.Debug.WriteLine(response.Content.ReadAsString());
-        }
+        
     }
 }
